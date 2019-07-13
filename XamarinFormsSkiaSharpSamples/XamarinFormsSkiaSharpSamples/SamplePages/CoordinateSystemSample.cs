@@ -14,23 +14,23 @@ namespace XamarinFormsSkiaSharpSamples.SamplePages
             var size = CanvasSize;
             var canvas = e.Surface.Canvas;
             canvas.Clear();
-
+             
             var pointsColor = new SKPaint
             {
-                Color = Color.Blue.ToSKColor(),
-                StrokeWidth = 5,
-                Style = SKPaintStyle.Stroke,
+                Color = Color.Blue.ToSKColor(), 
+                Style = SKPaintStyle.Fill,
                 IsAntialias = true
             };
 
             // Top left
-            canvas.DrawCircle(new SKPoint(0, 0), 10, pointsColor);
+            var radius = 20;
+            canvas.DrawCircle(new SKPoint(0, 0), radius, pointsColor);
             // Top right
-            canvas.DrawCircle(new SKPoint(size.Width, 0), 10, pointsColor);
+            canvas.DrawCircle(new SKPoint(size.Width, 0), radius, pointsColor);
             // Bottom left
-            canvas.DrawCircle(new SKPoint(0, size.Height), 10, pointsColor);
+            canvas.DrawCircle(new SKPoint(0, size.Height), radius, pointsColor);
             // Bottom right
-            canvas.DrawCircle(new SKPoint(size.Width, size.Height), 10, pointsColor);
+            canvas.DrawCircle(new SKPoint(size.Width, size.Height), radius, pointsColor);
 
             var smallerSize = size.Width > size.Height ? size.Height : size.Width;
             var centeredRect = new SKRect(0, 0, smallerSize, smallerSize);
@@ -38,46 +38,47 @@ namespace XamarinFormsSkiaSharpSamples.SamplePages
 
             var rectColor = new SKPaint
             {
-                Color = Color.Green.ToSKColor(),
-                StrokeWidth = 5,
+                Color = Color.Green.ToSKColor(), 
                 Style = SKPaintStyle.Stroke,
-                IsAntialias = true
+                IsAntialias = true,
+                StrokeWidth = 20
             }; 
 
             canvas.DrawRect(centeredRect, rectColor);
 
-            var arcPaint = new SKPaint
+            var redArcPaint = new SKPaint
             {
-                Color = Color.Red.ToSKColor(),
-                StrokeWidth = 5,
+                Color = Color.Red.ToSKColor(), 
                 Style = SKPaintStyle.Stroke,
-                IsAntialias = true
+                IsAntialias = true,
+                StrokeWidth = 20
             };
 
             using (var path = new SKPath())
             {
                 path.AddArc(centeredRect, 0, 45);
-                canvas.DrawPath(path, arcPaint);
+                canvas.DrawPath(path, redArcPaint);
             }
 
-            canvas.Save();
-            canvas.RotateDegrees(-90, centeredRect.MidX, centeredRect.MidY);
-            
-            var rotatedArcPaint = new SKPaint
+            //canvas.Save(); 
+            using (new SKAutoCanvasRestore(canvas))
             {
-                Color = Color.Orange.ToSKColor(),
-                StrokeWidth = 5,
-                Style = SKPaintStyle.Stroke,
-                IsAntialias = true
-            };
+                canvas.RotateDegrees(-90, centeredRect.MidX, centeredRect.MidY);
+                var orangeArcPaint = new SKPaint
+                {
+                    Color = Color.Orange.ToSKColor(),
+                    StrokeWidth = 20,
+                    Style = SKPaintStyle.Stroke,
+                    IsAntialias = true
+                };
 
-            using (var path = new SKPath())
-            {
-                path.AddArc(centeredRect, 0, 45);
-                canvas.DrawPath(path, rotatedArcPaint);
+                using (var path = new SKPath())
+                {
+                    path.AddArc(centeredRect, 0, 45);
+                    canvas.DrawPath(path, orangeArcPaint);
+                }
             }
-
-            canvas.Restore();
+            //canvas.Restore();
         }
     }
 }

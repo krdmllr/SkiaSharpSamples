@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 using XamarinFormsSkiaSharpSamples.SamplePages;
@@ -13,6 +14,8 @@ namespace XamarinFormsSkiaSharpSamples
         private const string Blend = "Blend";
         private const string FormsAndPathsSample = "Forms and paths";
         private const string SvgPath = "SVG Path";
+        private const string TouchSample = "Touch sample";
+        private const string BindableSample = "Bindable sample";
 
         /// <summary>
         /// All selectable pages.
@@ -23,7 +26,9 @@ namespace XamarinFormsSkiaSharpSamples
             Antialias,
             Blend,
             SvgPath,
-            FormsAndPathsSample
+            FormsAndPathsSample,
+            TouchSample,
+            BindableSample
         };
 
         public MenuPage()
@@ -45,8 +50,7 @@ namespace XamarinFormsSkiaSharpSamples
             {
                 case Coordinates:
                     masterDetail.Detail = new ContentPage
-                    {
-                        BackgroundColor = Color.Gray,
+                    { 
                         Content = new CoordinateSystemSample()
                     };
                     break;
@@ -74,6 +78,30 @@ namespace XamarinFormsSkiaSharpSamples
                         Content = new FormsAndPathsSample()
                     };
                     break;
+                case TouchSample:
+                    masterDetail.Detail = new ContentPage
+                    {
+                        Content = new TouchSample()
+                    };
+                    break;
+                case BindableSample:
+                    {
+                        var bindableSample = new BindableSample();
+                        bindableSample.SetBinding(SamplePages.BindableSample.BorderColorProperty, nameof(BindableSampleViewModel.BorderColor));
+                        bindableSample.SetBinding(SamplePages.BindableSample.TouchCommandProperty, nameof(BindableSampleViewModel.TouchedCommand));
+                        bindableSample.Touched += async (sender, args) =>
+                        {
+                            bindableSample.BackgroundColor = Color.DarkGray;
+                            await Task.Delay(500);
+                            bindableSample.BackgroundColor = Color.Transparent;
+                        };
+                        masterDetail.Detail = new ContentPage
+                        {
+                            Content = bindableSample,
+                            BindingContext = new BindableSampleViewModel()
+                        };
+                        break;
+                    }
             }
         }
 

@@ -9,6 +9,8 @@ namespace XamarinFormsSkiaSharpSamples.SamplePages
     {
         protected override void OnPaintSurface(SKPaintSurfaceEventArgs e)
         {
+            this.IgnorePixelScaling = false;
+
             var canvas = e.Surface.Canvas;
             var paint = new SKPaint
             {
